@@ -1,0 +1,16 @@
+projects:
+  lakfu:
+    schemaPath: amplify/backend/api/lakfu/build/schema.graphql
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        graphQLApiId: ejupvxbbtnfizepikqzreh5cqu
+extensions:
+  amplify:
+    version: 3

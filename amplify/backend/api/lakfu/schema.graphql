@@ -1,0 +1,145 @@
+type Entrepreneur implements User
+  @model
+  @auth(
+    rules: [
+      {allow: owner, operations: [create, update, delete, read]},
+      {allow: private, provider: userPools, operations: [read]}
+    ])
+{
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  connection: [User]
+  jobPosition: [String!]
+  company: Company
+  education: [Education]
+  userLocation: [Location]
+}
+
+type Investor implements User
+  @model
+  @auth(
+    rules: [
+      {allow: owner, operations: [create, update, delete, read]},
+      {allow: private, provider: userPools, operations: [read]}
+  ])
+{
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  connection: [User]
+  jobPosition: [String!]
+  company: [String!]
+  education: [Education]
+  userLocation: [Location]
+}
+
+interface User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  connection: [User]
+}
+
+type Startup implements Company
+  @model
+  @auth(
+    rules: [
+      {allow: owner, operations: [create, update, delete, read]},
+      {allow: private, provider: userPools, operations: [read]}
+  ])
+{
+  id: ID!
+  companyName: String!
+  companyLocation: [Location]
+  market: String!
+  description: String!
+  industry: [String!]!
+  pitchDeck: String!
+  financialEstimate: String
+  patent: [Patent]
+  employeeNumber: String!
+  amountRaised: Int
+  equityToGiveUp: Int
+  SECRegistered: String!
+  SECRegNumber: String
+  team: [User]
+  stage: String!
+  revenue: Int
+}
+
+type Investors implements Company
+  @model
+  @auth(
+    rules: [
+      {allow: owner, operations: [create, update, delete, read]},
+      {allow: private, provider: userPools, operations: [read]}
+  ])
+{
+  id: ID!
+  companyName: String!
+  companyLocation: [Location]
+  partnerYearsOfExperience: Int!
+  description: String!
+  fund: [Fund]
+  deal: [Deal]
+  maximumDealSize: Int!
+  industry: [String!]!
+  patent: [Patent]
+  employeeNumber: String!
+  SECRegistered: String!
+  SECRegNumber: String
+  team: [User]
+  requiredRevenue: Int
+  requiredEBITDA: Int
+  targetCompanyStage: String!
+  requiredPatent: String!
+}
+
+interface Company {
+  id: ID!
+  companyName: String!
+  companyLocation: [Location]
+}
+
+type Education {
+  id: ID!
+  educationName: String!
+  educationYear: Int
+  educationDegree: String!
+  educationMajor: String
+}
+
+type Location {
+  city: String!
+  state: String!
+  country: String!
+}
+
+type Patent {
+  patentID: String!
+  type: String!
+}
+
+type Revenue {
+  revenueID: ID!
+  currentYear: Int!
+  previousYear: Int
+  previousQuarter: Int
+}
+
+type Fund {
+  fundID: ID!
+  fundName: String!
+  fundSize: Int!
+  fundReturn: String
+}
+
+type Deal {
+  dealCompany: Company
+  dealAmount: Int
+}

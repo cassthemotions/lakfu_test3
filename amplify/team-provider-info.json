@@ -1,0 +1,22 @@
+{
+    "env": {
+        "awscloudformation": {
+            "AuthRoleName": "lakfu-20190929141950-authRole",
+            "UnauthRoleArn": "arn:aws:iam::695960104665:role/lakfu-20190929141950-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::695960104665:role/lakfu-20190929141950-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "lakfu-20190929141950-deployment",
+            "UnauthRoleName": "lakfu-20190929141950-unauthRole",
+            "StackName": "lakfu-20190929141950",
+            "StackId": "arn:aws:cloudformation:us-west-2:695960104665:stack/lakfu-20190929141950/df9dc4a0-e2fe-11e9-8e90-021900937a08"
+        },
+        "categories": {
+            "auth": {
+                "lakfu": {
+                    "facebookAppId": "718537035237976",
+                    "googleClientId": "266078403529"
+                }
+            }
+        }
+    }
+}

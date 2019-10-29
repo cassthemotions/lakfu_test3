@@ -1,0 +1,10 @@
+{
+    "AppSyncApiName": "lakfu",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authlakfu",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
