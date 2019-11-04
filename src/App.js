@@ -1,4 +1,3 @@
-//imports
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Component } from 'react';
@@ -7,80 +6,95 @@ import logo from './logo.svg';
 import './index.css';
 import './App.css';
 
+
+import { Rehydrated } from 'aws-appsync-react'
+import { ApolloProvider } from 'react-apollo'
+import gql from 'graphql-tag';
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import Amplify, { Auth, Hub } from 'aws-amplify';
-import awsconfig from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
 
 import API, { graphqlOperation } from '@aws-amplify/api';
+import awsmobile from './aws-exports';
 import PubSub from '@aws-amplify/pubsub';
-import { createTodo } from './graphql/mutations';
+import { createInvestor } from './graphql/mutations';
 
 import { useEffect, useReducer } from 'react' // using hooks
-import { listTodos } from './graphql/queries'
 
 // OAuth Imports
 import OAuthButton from './auth/OAuthButton';
-
 import config from './aws-exports';
-
 import LandingPage from "../src/pages/LandingPage.js";
+import ApolloClient from "apollo-boost";
 
-require('dotenv').config()
+// Import JS Files
+import Entrepreneur from './pages/Entrepreneur'
+import CreateEntrepreneur from './pages/CreateEntrepreneur'
+import CreateEntrepreneurHeader from './Headers/CreateEntrepreneurHeader'
 
-const initialState = {todos:[]};
-const reducer = (state, action) =>{
-  switch(action.type){
-    case 'QUERY':
-      return {...state, todos:action.todos}
-    case 'SUBSCRIPTION':
-      return {...state, todos:[...state.todos, action.todo]}
-    default:
-      return state
+// Import graphQL
+import * as queries from './graphql/queries'
+import * as mutations from './graphql/mutations'
+
+class App extends Component {
+  state = {
+    entrepreneurs: [],
+    showCreateEntrepreneur: false
+  }
+  async componentDidMount() {
+    try {
+      const entrepreneurData = await API.graphql(graphqlOperation(queries.getEntrepreneur))
+      const { data: {getEntrepreneur: { items }}} = entrepreneurData
+      this.setState({ entrepreneurs: items })
+    } catch(err) {
+      console.log('error: ', err)
+    }
+  }
+
+  createEntrepreneur = async(entrepreneur) => {
+    this.setState({
+      entrepreneurs: [...this.state.entrepreneurs, entrepreneur]
+    })
+    try {
+      await API.graphql(graphqlOperation(
+        mutations.createEntrepreneur,
+        {input: entrepreneur}
+      ))
+    } catch(err) {
+      console.log('error creating entrepreneur: ', err)
+    }
+  }
+
+  showCreateEntrepreneur = () => {
+    this.setState({ showCreateEntrepreneur: true})
+  }
+
+  render() {
+    return (
+      <div>
+        <CreateEntrepreneurHeader showCreateEntrepreneur={this.showCreateEntrepreneur} />
+        <Entrepreneur
+          entrepreneurs={this.state.entrepreneurs}
+          />
+        {
+          this.state.showCreateEntrepreneur && (
+            <CreateEntrepreneur
+              createEntrepreneur={this.createEntrepreneur}
+              closeModal={this.closeModal}
+              />
+          )
+        }
+      </div>
+    );
   }
 }
-
-Amplify.configure(awsconfig);
-API.configure(config);             // Configure Amplify
-PubSub.configure(config);
-
-async function createNewTodo() {
-  const todo = { name: "Use AppSync" , description: "Realtime and Offline"}
-  await API.graphql(graphqlOperation(createTodo, { input: todo }))
-}
-
-function App() {
-
-    const [state, dispatch] = useReducer(reducer, initialState)
-
-    useEffect(() => {
-    getData()
-  }, [])
-
-    async function getData() {
-      const todoData = await API.graphql(graphqlOperation(listTodos))
-      dispatch({type:'QUERY', todos: todoData.data.listTodos.items});
-}
-
+/*function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <button onClick={createNewTodo}>Add Todo</button>
-      </header>
-      <div>{ state.todos.map((todo, i) => <p key={todo.id}>{todo.name} : {todo.description}</p>) }</div>
+
     </div>
   );
-}
+}*/
+
 
 export default withAuthenticator(App, true);

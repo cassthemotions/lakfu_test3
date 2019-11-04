@@ -1,9 +1,6 @@
 import React from "react";
 import { Button, Container } from "reactstrap";
 import { Row, Col } from 'react-bootstrap';
-import 's-grid-settings';
-
-//import header video
 
 
 // core components
@@ -34,9 +31,8 @@ function LandingPageHeader() {
         className="page-header"
         data-parallax={true}
         ref={pageHeader}
-      >
+      ></div>
         <div className="filter" />
-        <Container>
           <section class="s-grid-top">
               <div className="motto text-left">
                 <h1>Into the world of</h1>
@@ -44,7 +40,6 @@ function LandingPageHeader() {
                 <h3>Network, raise funding, and invest</h3>
                 <br />
               </div>
-            </Col>
             <Col >
               <div className="motto text-center">
               <Button
@@ -65,11 +60,8 @@ function LandingPageHeader() {
               </Button>
             </div>
             </Col>
-
-        </Row>
-        </Container>
-      </div>
-    </>
+          </section>
+      </>
   );
 }
 
